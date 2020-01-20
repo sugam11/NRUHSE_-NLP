@@ -2,3 +2,12 @@ project/data/*
 week3/GoogleNews-vectors-negative300.bin.gz
 week3/data/*
 week3/starspace*
+project/thread_embeddings_by_tags/*
+project/db.sqlite3
+project/db.sqlite3-shm
+project/db.sqlite3-wal
+project/intent_recognizer.pkl
+project/sentence_tokenizer.pickle
+project/tag_classifier.pkl
+project/tfidf.p
+project/tfidf_vectorizer.pkl

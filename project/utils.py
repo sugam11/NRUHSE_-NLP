@@ -12,7 +12,7 @@ RESOURCE_PATH = {
     'TAG_CLASSIFIER': 'tag_classifier.pkl',
     'TFIDF_VECTORIZER': 'tfidf_vectorizer.pkl',
     'THREAD_EMBEDDINGS_FOLDER': 'thread_embeddings_by_tags',
-    'WORD_EMBEDDINGS': 'word_embeddings.tsv',
+    'WORD_EMBEDDINGS': './data/word_embeddings.tsv',
 }
 
 
@@ -45,16 +45,13 @@ def load_embeddings(embeddings_path):
     # Hint: you have already implemented a similar routine in the 3rd assignment.
     # Note that here you also need to know the dimension of the loaded embeddings.
     # When you load the embeddings, use numpy.float32 type as dtype
-
-    ########################
-    #### YOUR CODE HERE ####
-    ########################
-
-    # remove this when you're done
-    raise NotImplementedError(
-        "Open utils.py and fill with your code. In case of Google Colab, download"
-        "(https://github.com/hse-aml/natural-language-processing/blob/master/project/utils.py), "
-        "edit locally and upload using '> arrow on the left edge' -> Files -> UPLOAD")
+    embeddings = {}
+    with open(embeddings_path) as inFile : 
+        for line in inFile.readlines() : 
+            line = line.strip().split('\t')
+            embeddings[line[0]] = np.array(line[1:], dtype = np.float32)
+    embeddings_dim = embeddings[next(iter(embeddings))].shape
+    return embeddings, embeddings_dim[0]
 
 
 def question_to_vec(question, embeddings, dim):
@@ -62,15 +59,14 @@ def question_to_vec(question, embeddings, dim):
     
     # Hint: you have already implemented exactly this function in the 3rd assignment.
 
-    ########################
-    #### YOUR CODE HERE ####
-    ########################
-
-    # remove this when you're done
-    raise NotImplementedError(
-        "Open utils.py and fill with your code. In case of Google Colab, download"
-        "(https://github.com/hse-aml/natural-language-processing/blob/master/project/utils.py), "
-        "edit locally and upload using '> arrow on the left edge' -> Files -> UPLOAD")
+    if question == '':
+            return np.zeros(dim)
+    question = question.split(" ")
+    question_vec = np.zeros(dim)
+    question_vec = np.mean([embeddings[word] for word in question if word in embeddings], axis = 0)
+    if np.isnan(question_vec).any() : 
+        return np.zeros(dim)
+    return question_vec
 
 
 def unpickle_file(filename):
